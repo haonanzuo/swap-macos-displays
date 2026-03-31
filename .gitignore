@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+bin/displayplacer
+third_party/displayplacer/src/displayplacer

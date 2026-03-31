@@ -1,0 +1,4 @@
+interface:
+  display_name: "Swap macOS Displays"
+  short_description: "Swap two macOS display positions"
+  default_prompt: "Use $swap-macos-displays to swap the positions of the two current macOS displays."

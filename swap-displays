@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+
+if [ ! -x "$SCRIPT_DIR/bin/displayplacer" ] && ! command -v displayplacer >/dev/null 2>&1; then
+  "$SCRIPT_DIR/scripts/bootstrap_displayplacer.sh"
+fi
+
+exec python3 "$SCRIPT_DIR/scripts/swap_macos_displays.py" "$@"
