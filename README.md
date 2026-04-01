@@ -79,6 +79,20 @@ Tests:
 python3 ./scripts/test_swap_macos_displays.py
 ```
 
+## CI / 自动检查
+
+This repository includes a minimal GitHub Actions workflow for public regression checks.
+
+它会自动检查这些内容：
+
+- Python unit tests
+- Python syntax compilation
+- Vendored `displayplacer` build from source
+- YAML validity for `SKILL.md` frontmatter and `agents/openai.yaml`
+- Privacy scan to avoid committing obvious local identifiers or absolute paths
+
+The workflow does not attempt a real monitor swap on GitHub Actions runners, because a cloud macOS runner cannot guarantee a normal two-display local environment.
+
 ## Example dry-run output / 示例输出
 
 The real output on your machine will use your current display IDs. Public examples in this repository use placeholders only:
@@ -114,6 +128,7 @@ Treat the swap as successful when the display that used to own `origin:(0,0)` no
 - [`scripts/bootstrap_displayplacer.sh`](./scripts/bootstrap_displayplacer.sh): local build helper for vendored `displayplacer`
 - [`scripts/swap_macos_displays.py`](./scripts/swap_macos_displays.py): implementation
 - [`scripts/test_swap_macos_displays.py`](./scripts/test_swap_macos_displays.py): tests
+- [`.github/workflows/ci.yml`](./.github/workflows/ci.yml): minimal GitHub Actions checks
 - [`SKILL.md`](./SKILL.md): Codex skill definition
 - [`agents/openai.yaml`](./agents/openai.yaml): skill metadata
 - [`third_party/displayplacer`](./third_party/displayplacer): vendored upstream source and license

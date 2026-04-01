@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  macos-checks:
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Run unit tests
+        run: python3 ./scripts/test_swap_macos_displays.py
+
+      - name: Verify Python syntax
+        run: python3 -m py_compile ./scripts/swap_macos_displays.py
+
+      - name: Build vendored displayplacer
+        run: ./scripts/bootstrap_displayplacer.sh
+
+      - name: Verify SKILL.md frontmatter
+        run: |
+          ruby -e 'require "yaml"; path="SKILL.md"; text=File.read(path); m=text.match(/\A---\n(.*?)\n---\n/m) or abort("frontmatter missing"); data=YAML.safe_load(m[1]); abort("frontmatter invalid") unless data.is_a?(Hash) && data["name"] && data["description"]; puts "frontmatter ok"'
+
+      - name: Verify agent metadata YAML
+        run: |
+          ruby -e 'require "yaml"; path="agents/openai.yaml"; data=YAML.safe_load(File.read(path)); abort("openai.yaml parse failed") unless data.is_a?(Hash); puts "openai.yaml ok"'
+
+      - name: Privacy scan
+        run: |
+          ! rg -n 'kaijimima1234|7288C307|37D8832A|/Users/' .
+
+      - name: Ensure build outputs stay untracked
+        run: |
+          rm -f ./bin/displayplacer ./third_party/displayplacer/src/displayplacer
+          git diff --exit-code
+          git diff --cached --exit-code
